@@ -29,4 +29,4 @@ library(reshape2)
 list3<-names(x_merge)[seq(3,ncol(x_merge))] #need to recreate column names list since R changed '-' to '.'
 x_melt<-melt(x_merge, id.vars=c('SubjectNumber','Activity'),measure.vars=c(list3)) #make the dF tall and skinny, values variables are defined in list3
 finalData<-dcast(x_melt, SubjectNumber + Activity~variable, mean) #averaging all data points by subject number and activity
-write.table(finalData, file='Tidy Data.txt') #export the tidy data set into a txt file and place it at the same directory
+write.table(finalData, file='TidyData.txt',row.names=FALSE) #export the tidy data set into a txt file and place it at the same directory
