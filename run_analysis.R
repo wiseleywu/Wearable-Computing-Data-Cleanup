@@ -10,7 +10,7 @@ subject_merge<-rbind(subject_train,subject_test) #merge subject_train and subjec
 x_train<-read.table('./train/x_train.txt',col.names=featuresVector) #read x_train and name the column using featuresVector
 x_test<-read.table('./test/x_test.txt',col.names=featuresVector) #read x_test and name the column using featuresVector
 x_merge<-rbind(x_train,x_test) #merge x_train and x_test
-list<-grep('(mean|std)',featuresVector,value=FALSE) #create a column number list where the data are mean/std
+list<-intersect(grep("mean|std",featuresVector,value=FALSE),grep("meanFreq",featuresVector,value=FALSE,invert=TRUE))
 x_merge<-x_merge[,c(list)] #apply the filter list above to subset x_train with only mean/std data
 
 # read y labeled txt files, label, and merge
@@ -26,7 +26,7 @@ x_merge<-cbind(subject_merge,y_merge,x_merge) #merge three data frames together
 
 # creating small independent data set
 library(reshape2)
-list3<-names(x_merge)[c(seq(3,81))] #need to recreate column names list since R is shortening them
+list3<-names(x_merge)[seq(3,ncol(x_merge))] #need to recreate column names list since R changed '-' to '.'
 x_melt<-melt(x_merge, id.vars=c('SubjectNumber','Activity'),measure.vars=c(list3)) #make the dF tall and skinny, values variables are defined in list3
 finalData<-dcast(x_melt, SubjectNumber + Activity~variable, mean) #averaging all data points by subject number and activity
 write.table(finalData, file='Tidy Data.txt') #export the tidy data set into a txt file and place it at the same directory
